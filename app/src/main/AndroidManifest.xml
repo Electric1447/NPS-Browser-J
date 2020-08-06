@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.illusionware.npsbrowser">
+    package="eparon.npsbrowserj">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/nps_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/nps_icon_round"
         android:supportsRtl="true"
         android:theme="@style/NPSTheme">
-        <activity android:name=".activities.MainActivity">
+
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.MainActivity"/>
-        <activity android:name=".activities.AppsListActivity" />
+            android:parentActivityName=".Activities.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".Activities.AppsListActivity" />
+
         <activity
-            android:name=".activities.SingleAppActivity"
+            android:name=".Activities.SingleAppActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+
     </application>
 
 </manifest>
