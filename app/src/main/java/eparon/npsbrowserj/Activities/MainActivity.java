@@ -71,12 +71,16 @@ public class MainActivity extends BaseActivity {
                     List<String[]> entries = tsvReader.readAll();
                     ArrayList<BaseTSV> apps = new ArrayList<>();
 
-                    for (String[] item : entries.subList(1, entries.size()))
+                    for (String[] item : entries.subList(1, entries.size())) {
+                        if (item[0].equals(""))
+                            continue;
+
                         if (requestCode == PSV_REQUEST_CODE)
                             apps.add(new VitaGames(item[Constants.PSV_TITLEID], item[Constants.PSV_REGION], item[Constants.PSV_NAME], item[Constants.PSV_PKGLINK], item[Constants.PSV_ZRIF], item[Constants.PSV_CONTENTID], item[Constants.PSV_LASTMODDATE], 0, item[Constants.PSV_SHA256], item[Constants.PSV_MINFW]));
                         else if (requestCode == PS3_REQUEST_CODE)
                             apps.add(new PS3Games(item[Constants.PS3_TITLEID], item[Constants.PS3_REGION], item[Constants.PS3_NAME], item[Constants.PS3_PKGLINK], item[Constants.PS3_RAP], item[Constants.PS3_CONTENTID], item[Constants.PS3_LASTMODDATE], 0, item[Constants.PS3_SHA256]));
                         else return;
+                    }
 
                     // Sort by title
                     Collections.sort(apps, (a1, a2) -> {
