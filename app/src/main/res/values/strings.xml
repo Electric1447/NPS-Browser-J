@@ -3,8 +3,11 @@
 
     <string name="app_name">NPS Browser J</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="menu_search">Search</string>
 
     <string name="tsv_button_psv">Playstation Vita Games</string>
     <string name="tsv_button_ps3">Playstation 3 Games</string>
+    <string name="tsv_button_psv_dlc">Playstation Vita DLCs</string>
+    <string name="tsv_button_ps3_dlc">Playstation 3 DLCs</string>
 
 </resources>

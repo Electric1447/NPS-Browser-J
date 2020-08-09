@@ -12,9 +12,8 @@ public class BaseTSV implements Serializable {
     private String ContentID;
     private String LastDateTime;
     private long FileSize;
-    private String SHA256;
 
-    public BaseTSV (String titleID, String region, String title, String link, String license, String contentID, String lastDateTime, long fileSize, String sha256) {
+    public BaseTSV (String titleID, String region, String title, String link, String license, String contentID, String lastDateTime, long fileSize) {
         this.TitleID = titleID;
         this.Region = region;
         this.Title = title;
@@ -23,7 +22,6 @@ public class BaseTSV implements Serializable {
         this.ContentID = contentID;
         this.LastDateTime = lastDateTime;
         this.FileSize = fileSize;
-        this.SHA256 = sha256;
     }
 
     public String getTitleID () {
@@ -56,10 +54,6 @@ public class BaseTSV implements Serializable {
 
     public long getFileSize () {
         return FileSize;
-    }
-
-    public String getSHA256 () {
-        return SHA256;
     }
 
 }

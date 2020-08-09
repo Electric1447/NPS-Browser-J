@@ -3,10 +3,13 @@ package eparon.npsbrowserj.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +32,7 @@ public class AppsListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apps_list);
 
-        viewAdapter = new AppAdapter(Objects.requireNonNull(apps), getApplicationContext());
+        viewAdapter = new AppAdapter(getApplicationContext(), Objects.requireNonNull(apps));
 
         recyclerView = findViewById(R.id.appsRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -51,17 +54,24 @@ public class AppsListActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_main, menu);
-        return true;
-    }
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
 
-    @Override
-    public boolean onOptionsItemSelected (@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            startActivity(new Intent(AppsListActivity.this, SettingsActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        SearchView searchView = (SearchView)searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit (String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange (String newText) {
+                viewAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
     }
 
 }

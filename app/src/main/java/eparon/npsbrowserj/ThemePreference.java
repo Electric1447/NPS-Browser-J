@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 
+@SuppressWarnings("unused")
 public class ThemePreference extends ListPreference {
 
     public ThemePreference (Context context, AttributeSet attrs, int defStyleAttr) {

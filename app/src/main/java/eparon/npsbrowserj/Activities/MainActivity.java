@@ -29,15 +29,16 @@ import eparon.npsbrowserj.R;
 import eparon.npsbrowserj.TSV.BaseTSV;
 import eparon.npsbrowserj.TSV.Constants;
 import eparon.npsbrowserj.TSV.PS3Games;
+import eparon.npsbrowserj.TSV.VitaDLCs;
 import eparon.npsbrowserj.TSV.VitaGames;
 
 public class MainActivity extends BaseActivity {
 
-    private static final int PSV_REQUEST_CODE = 56, PS3_REQUEST_CODE = 63;
+    private static final int PSV_REQUEST_CODE = 56, PSV_DLCS_REQUEST_CODE = 57, PS3_REQUEST_CODE = 63, PS3_DLCS_REQUEST_CODE = 64;
 
     CSVReader tsvReader;
 
-    Button psvButton, ps3Button;
+    Button psvButton, ps3Button, psvdlcButton, ps3dlcButton;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -46,9 +47,13 @@ public class MainActivity extends BaseActivity {
 
         psvButton = findViewById(R.id.psv_button);
         ps3Button = findViewById(R.id.ps3_button);
+        ps3dlcButton = findViewById(R.id.ps3_dlc_button);
+        psvdlcButton = findViewById(R.id.psv_dlc_button);
 
         psvButton.setOnClickListener(v -> loadTSV(PSV_REQUEST_CODE));
         ps3Button.setOnClickListener(v -> loadTSV(PS3_REQUEST_CODE));
+        psvdlcButton.setOnClickListener(v -> loadTSV(PSV_DLCS_REQUEST_CODE));
+        ps3dlcButton.setOnClickListener(v -> loadTSV(PS3_DLCS_REQUEST_CODE));
     }
 
     private void loadTSV (int type) {
@@ -64,7 +69,7 @@ public class MainActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             try {
-                CSVParser parser = new CSVParserBuilder().withEscapeChar('\\').withSeparator('\t').build();
+                CSVParser parser = new CSVParserBuilder().withQuoteChar('"').withEscapeChar('\\').withSeparator('\t').withIgnoreQuotations(true).build();
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 tsvReader = new CSVReaderBuilder(new InputStreamReader(inputStream)).withCSVParser(parser).build();
                 try {
@@ -77,8 +82,10 @@ public class MainActivity extends BaseActivity {
 
                         if (requestCode == PSV_REQUEST_CODE)
                             apps.add(new VitaGames(item[Constants.PSV_TITLEID], item[Constants.PSV_REGION], item[Constants.PSV_NAME], item[Constants.PSV_PKGLINK], item[Constants.PSV_ZRIF], item[Constants.PSV_CONTENTID], item[Constants.PSV_LASTMODDATE], 0, item[Constants.PSV_SHA256], item[Constants.PSV_MINFW]));
-                        else if (requestCode == PS3_REQUEST_CODE)
-                            apps.add(new PS3Games(item[Constants.PS3_TITLEID], item[Constants.PS3_REGION], item[Constants.PS3_NAME], item[Constants.PS3_PKGLINK], item[Constants.PS3_RAP], item[Constants.PS3_CONTENTID], item[Constants.PS3_LASTMODDATE], 0, item[Constants.PS3_SHA256]));
+                        else if (requestCode == PSV_DLCS_REQUEST_CODE)
+                            apps.add(new VitaDLCs(item[Constants.PSV_TITLEID], item[Constants.PSV_REGION], item[Constants.PSV_NAME], item[Constants.PSV_PKGLINK], item[Constants.PSV_ZRIF], item[Constants.PSV_CONTENTID], item[Constants.PSV_LASTMODDATE], 0, item[Constants.PSV_DLCS_SHA256]));
+                        else if (requestCode == PS3_REQUEST_CODE || requestCode == PS3_DLCS_REQUEST_CODE)
+                            apps.add(new PS3Games(item[Constants.PS3_TITLEID], item[Constants.PS3_REGION], item[Constants.PS3_NAME], item[Constants.PS3_PKGLINK], item[Constants.PS3_RAP], item[Constants.PS3_CONTENTID], item[Constants.PS3_LASTMODDATE], 0));
                         else return;
                     }
 

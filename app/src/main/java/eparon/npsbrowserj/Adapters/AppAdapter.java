@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,12 +20,14 @@ import eparon.npsbrowserj.TSV.VitaGames;
 
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 
-    private ArrayList<BaseTSV> appsList;
     private Context mContext;
+    private ArrayList<BaseTSV> mAppsList;
+    private ArrayList<BaseTSV> mAppsListFull;
 
-    public AppAdapter (ArrayList<BaseTSV> appsList, Context context) {
-        this.appsList = appsList;
+    public AppAdapter (Context context, ArrayList<BaseTSV> appsList) {
         this.mContext = context;
+        this.mAppsList = appsList;
+        this.mAppsListFull = new ArrayList<>(mAppsList);
     }
 
     @NonNull
@@ -35,7 +38,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder (@NonNull AppAdapter.ViewHolder holder, int position) {
-        BaseTSV currentItem = appsList.get(position);
+        BaseTSV currentItem = mAppsList.get(position);
 
         holder.appTitle.setText(currentItem.getTitle());
         holder.appRegion.setText(currentItem.getRegion());
@@ -52,7 +55,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 
     @Override
     public int getItemCount () {
-        return appsList.size();
+        return mAppsList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -66,5 +69,42 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
             appLastDate = itemView.findViewById(R.id.appLastDate);
         }
     }
+
+    //region Filter
+
+    public Filter getFilter () {
+        return mFilter;
+    }
+
+    private Filter mFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering (CharSequence constraint) {
+            ArrayList<BaseTSV> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(mAppsListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (BaseTSV item : mAppsListFull)
+                    if (item.getTitle().toLowerCase().contains(filterPattern))
+                        filteredList.add(item);
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults (CharSequence constraint, FilterResults results) {
+            mAppsList.clear();
+            //noinspection unchecked
+            mAppsList.addAll((ArrayList<BaseTSV>)results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    //endregion
 
 }
